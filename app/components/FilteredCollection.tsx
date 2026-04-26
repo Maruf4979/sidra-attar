@@ -271,9 +271,21 @@ export default function FilteredCollection({
 
         {/* Main Product Grid Area */}
         <div className="collections-main">
-          <div className="page-header" style={{ paddingTop: "0", paddingBottom: "1.5rem" }}>
-            <h1 style={{ textAlign: "left", fontSize: "1.8rem" }}>{title}</h1>
-            <p style={{ textAlign: "left", margin: "0" }}>{description}</p>
+          <div className="page-header" style={{ paddingTop: "0", paddingBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
+            <div>
+              <h1 style={{ textAlign: "left", fontSize: "1.8rem" }}>{title}</h1>
+              <p style={{ textAlign: "left", margin: "0" }}>{description}</p>
+            </div>
+            
+            {/* Advertisement Ticker */}
+            <div className="promo-ticker-wrapper">
+              <div className="promo-ticker-content">
+                <span>✨ Limited Time Offer: Get 20% OFF on all Luxury Perfumes! Use code: LUX20 ✨</span>
+                <span>🚚 Free Shipping on all orders above ₹999! 🚚</span>
+                <span>🎁 Special Gift Hamper with every Nikah Set purchase! 🎁</span>
+                <span>📜 Authentic Islamic Books with Hindi/Urdu translations available! 📜</span>
+              </div>
+            </div>
           </div>
 
           <div className="product-grid">
