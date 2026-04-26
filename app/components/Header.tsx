@@ -75,7 +75,7 @@ export default function Header() {
           {/* Actions */}
           <div className="header-actions">
             <button
-              className="header-icon-btn theme-btn"
+              className="header-icon-btn theme-btn hide-mobile"
               onClick={toggleTheme}
               aria-label="Toggle Theme"
             >
@@ -92,12 +92,12 @@ export default function Header() {
               )}
             </button>
 
-            <Link href="/account" className="header-icon-btn location-btn" style={{ flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '4px' }}>
+            <Link href="/account" className="header-icon-btn location-btn hide-mobile" style={{ flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '2px' }}>
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <div className="location-text">
                 <span className="header-icon-subtext">Delivering to Mumbai</span>
                 <span className="header-icon-text">Update location</span>
               </div>
@@ -108,10 +108,10 @@ export default function Header() {
               <span className="header-icon-subtext">
                 {isLoggedIn ? `Hello, ${userName}` : "Hello, sign in"}
               </span>
-              <span className="header-icon-text">Account &amp; Lists</span>
+              <span className="header-icon-text">Account</span>
             </Link>
 
-            <Link href="/account" className="header-icon-btn">
+            <Link href="/account" className="header-icon-btn hide-mobile">
               <span className="header-icon-subtext">Returns</span>
               <span className="header-icon-text">&amp; Orders</span>
             </Link>
@@ -122,14 +122,14 @@ export default function Header() {
               aria-label="Cart"
             >
               <div className="cart-icon-wrapper">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                   <line x1="3" y1="6" x2="21" y2="6" />
                   <path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
                 <span className="cart-count">{totalItems}</span>
               </div>
-              <span className="header-icon-text" style={{ paddingBottom: '2px' }}>Cart</span>
+              <span className="header-icon-text hide-mobile" style={{ paddingBottom: '2px' }}>Cart</span>
             </button>
           </div>
         </div>
@@ -237,9 +237,11 @@ export default function Header() {
           <div className="side-drawer-section" style={{ borderBottom: 'none' }}>
             <div className="side-drawer-title">Help & Settings</div>
             <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Your Account</Link>
+            <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Returns & Orders</Link>
+            <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Delivery Location</Link>
             <Link href="/collections?cat=Customer+Service" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Customer Service</Link>
             <button className="side-drawer-link" style={{ width: '100%' }} onClick={() => { toggleTheme(); setMobileMenuOpen(false); }}>
-              Toggle Theme
+              Toggle Theme ({theme === 'dark' ? 'Light Mode' : 'Dark Mode'})
             </button>
             {isLoggedIn ? (
               <button

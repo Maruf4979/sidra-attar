@@ -107,7 +107,7 @@ export default function AccountPage() {
           {/* Saved Addresses */}
           <div className="account-card">
             <h3>Saved Addresses</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div className="address-grid">
               <div style={{
                 padding: "1.25rem",
                 background: "var(--surface-container-low)",
