@@ -43,6 +43,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("Registration successful for:", email);
+
     return NextResponse.json(
       {
         user: {
@@ -53,10 +55,14 @@ export async function POST(request: Request) {
       },
       { status: 201 }
     );
-  } catch (error) {
-    console.error("Registration error:", error);
+  } catch (error: any) {
+    console.error("Registration error details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+    });
     return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
+      { error: "Something went wrong during registration. Please try again." },
       { status: 500 }
     );
   }
