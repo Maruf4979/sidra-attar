@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Product } from "../data/products";
+import { Product } from "../lib/products";
 import { useCart } from "../context/CartContext";
 
 export default function ProductCard({ product }: { product: Product }) {

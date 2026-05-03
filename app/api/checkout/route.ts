@@ -27,40 +27,57 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build Stripe line items
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lineItems: any[] = items.map(
-      (item: { name: string; price: number; quantity: number }) => ({
+    // 1. Calculate totals and build Stripe line items
+    let subtotal = 0;
+    const lineItems = items.map((item: any) => {
+      subtotal += item.price * item.quantity;
+      return {
         price_data: {
           currency: "inr",
-          product_data: {
-            name: item.name,
-          },
-          unit_amount: Math.round(item.price * 100), // Stripe expects amount in paise
+          product_data: { name: item.name },
+          unit_amount: Math.round(item.price * 100),
         },
         quantity: item.quantity,
-      })
-    );
+      };
+    });
 
-    // Add shipping fee if subtotal < ₹999
-    const subtotal = items.reduce(
-      (sum: number, item: { price: number; quantity: number }) =>
-        sum + item.price * item.quantity,
-      0
-    );
-
-    if (subtotal < 999) {
+    const shipping = subtotal >= 999 ? 0 : 99;
+    if (shipping > 0) {
       lineItems.push({
         price_data: {
           currency: "inr",
           product_data: { name: "Shipping" },
-          unit_amount: 9900, // ₹99
+          unit_amount: 9900,
         },
         quantity: 1,
       });
     }
 
-    // Create a Stripe Checkout Session
+    const totalAmount = subtotal + shipping;
+
+    // 2. Create the order in PENDING state
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) throw new Error("User not found");
+
+    const order = await prisma.order.create({
+      data: {
+        userId: user.id,
+        totalAmount: totalAmount,
+        status: "PENDING",
+        items: {
+          create: items.map((item: any) => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        },
+      },
+    });
+
+    // 3. Create a Stripe Checkout Session
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
@@ -69,15 +86,22 @@ export async function POST(request: Request) {
       success_url: `${process.env.NEXTAUTH_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXTAUTH_URL}/cart`,
       metadata: {
-        userId: (session.user as { id: string }).id,
+        orderId: order.id,
+        userId: user.id,
       },
     });
 
+    // Update order with stripe session id
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { stripeSessionId: checkoutSession.id },
+    });
+
     return NextResponse.json({ url: checkoutSession.url });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Stripe checkout error:", error);
     return NextResponse.json(
-      { error: "Failed to create checkout session" },
+      { error: error.message || "Failed to create checkout session" },
       { status: 500 }
     );
   }

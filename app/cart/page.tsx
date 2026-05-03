@@ -28,6 +28,7 @@ export default function CartPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((item) => ({
+            id: item.id, // Ensure ID is passed
             name: item.name,
             price: item.price,
             quantity: item.quantity,
@@ -50,17 +51,45 @@ export default function CartPage() {
     }
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
+    if (!session) {
+      window.location.href = "/auth/signin";
+      return;
+    }
+    
     if (paymentMethod === "card") {
       handleStripeCheckout();
     } else {
-      // COD or UPI - simplified flow
+      // COD flow
       setCodLoading(true);
-      setTimeout(() => {
-        clearCart();
+      try {
+        const res = await fetch("/api/checkout/cod", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+            })),
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          clearCart();
+          window.location.href = "/checkout/success?order_id=" + data.orderId;
+        } else {
+          alert(data.error || "Failed to place order");
+        }
+      } catch (error) {
+        console.error("COD error:", error);
+        alert("Something went wrong. Please try again.");
+      } finally {
         setCodLoading(false);
-        alert("Order placed successfully! Thank you for choosing Sidra Attar Wala.");
-      }, 1000);
+      }
     }
   };
 

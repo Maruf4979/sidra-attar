@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function CheckoutSuccessPage() {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  const orderId = searchParams.get("order_id");
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setSessionId(params.get("session_id"));
-  }, []);
+  const isCOD = !!orderId;
 
   return (
     <>
@@ -36,13 +36,16 @@ export default function CheckoutSuccessPage() {
         </div>
 
         <h2 style={{ fontFamily: "var(--font-headline)", marginBottom: "0.75rem", fontSize: "1.75rem" }}>
-          Payment Successful
+          {isCOD ? "Order Placed Successfully" : "Payment Successful"}
         </h2>
         <p style={{ color: "var(--outline)", marginBottom: "0.5rem", maxWidth: "500px", margin: "0 auto 1.5rem" }}>
-          Your order has been placed and payment has been received. We&apos;ll send you an email confirmation shortly with tracking details.
+          {isCOD 
+            ? "Your order has been received and will be processed soon. Cash will be collected upon delivery." 
+            : "Your order has been placed and payment has been received. We'll send you an email confirmation shortly."
+          }
         </p>
 
-        {sessionId && (
+        {(sessionId || orderId) && (
           <p style={{
             fontSize: "0.8rem",
             color: "var(--outline-variant)",
@@ -50,7 +53,7 @@ export default function CheckoutSuccessPage() {
             marginBottom: "2rem",
             wordBreak: "break-all",
           }}>
-            Transaction ID: {sessionId}
+            {isCOD ? `Order ID: ${orderId}` : `Transaction ID: ${sessionId}`}
           </p>
         )}
 
@@ -68,5 +71,13 @@ export default function CheckoutSuccessPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={<div className="section text-center">Processing order details...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }

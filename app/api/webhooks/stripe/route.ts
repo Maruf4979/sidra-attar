@@ -16,28 +16,24 @@ export async function POST(request: Request) {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err) {
-    console.error("Webhook signature verification failed:", err);
+  } catch (err: any) {
+    console.error("Webhook signature verification failed:", err.message);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const userId = session.metadata?.userId;
+    const orderId = session.metadata?.orderId;
 
-    if (userId && session.amount_total) {
+    if (orderId) {
       try {
-        await prisma.order.create({
-          data: {
-            userId,
-            stripeSessionId: session.id,
-            totalAmount: session.amount_total / 100, // Convert from paise to rupees
-            status: "PAID",
-          },
+        await prisma.order.update({
+          where: { id: orderId },
+          data: { status: "PAID" },
         });
-        console.log(`Order created for user ${userId}, session ${session.id}`);
+        console.log(`Order ${orderId} marked as PAID`);
       } catch (dbError) {
-        console.error("Failed to create order in DB:", dbError);
+        console.error("Failed to update order status:", dbError);
       }
     }
   }

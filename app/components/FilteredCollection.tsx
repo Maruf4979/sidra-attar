@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import HeroCarousel from "./HeroCarousel";
-import { Product, categories } from "../data/products";
+import { Product } from "../lib/products";
+import { categories } from "../data/products";
 
 const fragranceTypes = [
   { label: "Light Smell", tags: ["Fresh", "Aquatic", "Clean", "Daily", "Morning", "Floral", "Sweet"] },

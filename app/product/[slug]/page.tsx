@@ -1,20 +1,16 @@
-"use client";
-
-import { use } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getProductBySlug, getRelatedProducts } from "../../data/products";
-import { useCart } from "../../context/CartContext";
-import ProductCard from "../../components/ProductCard";
+import { getProductBySlug, getRelatedProducts } from "@/app/lib/products";
+import ProductCard from "@/app/components/ProductCard";
+import AddToCartButton from "@/app/components/AddToCartButton";
 
-export default function ProductDetailPage({
+export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = use(params);
-  const product = getProductBySlug(resolvedParams.slug);
-  const { addItem } = useCart();
+  const resolvedParams = await params;
+  const product = await getProductBySlug(resolvedParams.slug);
 
   if (!product) {
     return (
@@ -23,7 +19,7 @@ export default function ProductDetailPage({
           Product Not Found
         </h1>
         <p style={{ color: "var(--outline)", marginBottom: "2rem" }}>
-          The product you&apos;re looking for doesn&apos;t exist.
+          The product you&apos;re looking for doesn&apos;t exist in our database.
         </p>
         <Link href="/collections" className="btn-primary">
           Browse Collections
@@ -32,8 +28,8 @@ export default function ProductDetailPage({
     );
   }
 
-  const related = getRelatedProducts(product);
-  const profile = product.profile;
+  const related = await getRelatedProducts(product);
+  const profile = product.profile || {};
 
   return (
     <>
@@ -83,7 +79,7 @@ export default function ProductDetailPage({
           </div>
 
           {/* Wholesale Tiers */}
-          {product.wholesalePrices && (
+          {product.wholesalePrices && product.wholesalePrices.length > 0 && (
             <div className="pdp-wholesale">
               <h3>Wholesale Volume Pricing</h3>
               <div className="pdp-wholesale-tiers">
@@ -114,116 +110,70 @@ export default function ProductDetailPage({
           </div>
 
           {/* Profile */}
-          <div>
-            <h3
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "0.7rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                fontWeight: 700,
-                color: "var(--on-surface-variant)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              The Profile
-            </h3>
-            <div className="pdp-profile">
-              {profile.longevity && (
-                <div className="pdp-profile-item">
-                  <div className="label">Longevity</div>
-                  <div className="value">{profile.longevity}</div>
-                </div>
-              )}
-              {profile.sillage && (
-                <div className="pdp-profile-item">
-                  <div className="label">Sillage</div>
-                  <div className="value">{profile.sillage}</div>
-                </div>
-              )}
-              {profile.gender && (
-                <div className="pdp-profile-item">
-                  <div className="label">Gender</div>
-                  <div className="value">{profile.gender}</div>
-                </div>
-              )}
-              {profile.concentration && (
-                <div className="pdp-profile-item">
-                  <div className="label">Type</div>
-                  <div className="value">{profile.concentration}</div>
-                </div>
-              )}
-              {profile.type && (
-                <div className="pdp-profile-item">
-                  <div className="label">Type</div>
-                  <div className="value">{profile.type}</div>
-                </div>
-              )}
-              {profile.material && (
-                <div className="pdp-profile-item">
-                  <div className="label">Material</div>
-                  <div className="value">{profile.material}</div>
-                </div>
-              )}
-              {profile.size && (
-                <div className="pdp-profile-item">
-                  <div className="label">Size</div>
-                  <div className="value">{profile.size}</div>
-                </div>
-              )}
-              {profile.occasion && (
-                <div className="pdp-profile-item">
-                  <div className="label">Occasion</div>
-                  <div className="value">{profile.occasion}</div>
-                </div>
-              )}
+          {Object.keys(profile).length > 0 && (
+            <div>
+              <h3
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.7rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  fontWeight: 700,
+                  color: "var(--on-surface-variant)",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                The Profile
+              </h3>
+              <div className="pdp-profile">
+                {Object.entries(profile).map(([key, value]) => (
+                  <div key={key} className="pdp-profile-item">
+                    <div className="label">{key.charAt(0).toUpperCase() + key.slice(1)}</div>
+                    <div className="value">{value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Occasions */}
-          <div>
-            <h3
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "0.7rem",
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                fontWeight: 700,
-                color: "var(--on-surface-variant)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Occasion
-            </h3>
-            <div className="pdp-occasions">
-              {product.occasions.map((occ) => (
-                <span key={occ} className="pdp-occasion-tag">
-                  {occ}
-                </span>
-              ))}
+          {product.occasions && product.occasions.length > 0 && (
+            <div>
+              <h3
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.7rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  fontWeight: 700,
+                  color: "var(--on-surface-variant)",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Occasion
+              </h3>
+              <div className="pdp-occasions">
+                {product.occasions.map((occ) => (
+                  <span key={occ} className="pdp-occasion-tag">
+                    {occ}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Actions */}
           <div className="pdp-actions">
-            <button
-              className="btn-primary"
-              style={{ flex: 1 }}
-              onClick={() =>
-                addItem({
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                  gradient: product.gradient,
-                })
-              }
-            >
-              Add to Cart
-            </button>
+            <AddToCartButton product={{
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              gradient: product.gradient
+            }} />
             <Link
               href="/wholesale"
               className="btn-primary dark"
-              style={{ flex: 1 }}
+              style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               Wholesale Inquiry
             </Link>

@@ -1,6 +1,41 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/lib/auth";
+import { prisma } from "@/app/lib/prisma";
+import AvatarUploader from "@/app/components/AvatarUploader";
+import { redirect } from "next/navigation";
 
-export default function AccountPage() {
+export default async function AccountPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.email) {
+    redirect("/auth/signin");
+  }
+
+  // Fetch complete user data including image
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  // Fetch user's orders
+  const orders = await prisma.order.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
+
+  // Calculate stats
+  const totalOrders = await prisma.order.count({ where: { userId: user.id } });
+  const totalSpentAggregate = await prisma.order.aggregate({
+    where: { userId: user.id },
+    _sum: { totalAmount: true },
+  });
+  const totalSpent = totalSpentAggregate._sum.totalAmount || 0;
+
   return (
     <>
       <div className="page-header">
@@ -18,7 +53,7 @@ export default function AccountPage() {
             </svg>
             Dashboard
           </Link>
-          <Link href="/account">
+          <Link href="/account/orders">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
               <line x1="3" y1="6" x2="21" y2="6" />
@@ -46,24 +81,24 @@ export default function AccountPage() {
           {/* Welcome Card */}
           <div className="account-card">
             <div className="account-welcome">
-              <div className="account-avatar">S</div>
+              <AvatarUploader userId={user.id} currentImageUrl={user.image} />
               <div>
-                <h2>Welcome back, Sidra</h2>
-                <p>Member since 2023 · Gold Tier Wholesale Partner</p>
+                <h2>Welcome back, {user.name?.split(" ")[0] || "User"}</h2>
+                <p>{user.email}</p>
               </div>
             </div>
 
             <div className="account-stats">
               <div className="account-stat">
-                <div className="value">12</div>
+                <div className="value">{totalOrders}</div>
                 <div className="label">Orders</div>
               </div>
               <div className="account-stat">
-                <div className="value">₹24.5K</div>
+                <div className="value">₹{(totalSpent / 1000).toFixed(1)}K</div>
                 <div className="label">Total Spent</div>
               </div>
               <div className="account-stat">
-                <div className="value">Gold</div>
+                <div className="value">{user.role === 'ADMIN' ? 'Admin' : 'Member'}</div>
                 <div className="label">Tier</div>
               </div>
             </div>
@@ -72,36 +107,28 @@ export default function AccountPage() {
           {/* Recent Orders */}
           <div className="account-card">
             <h3>Recent Orders</h3>
-            <div className="order-list">
-              <div className="order-list-item">
-                <div>
-                  <div className="order-id">#SAW-2024-1847</div>
-                  <div className="order-date">March 15, 2024</div>
-                </div>
-                <span className="order-status delivered">Delivered</span>
+            {orders.length === 0 ? (
+              <p style={{ color: "var(--outline)", fontSize: "0.9rem" }}>No recent orders found.</p>
+            ) : (
+              <div className="order-list">
+                {orders.map((order) => (
+                  <div key={order.id} className="order-list-item">
+                    <div>
+                      <div className="order-id">#{order.id.slice(0, 8).toUpperCase()}</div>
+                      <div className="order-date">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div className="order-price">₹{order.totalAmount.toLocaleString("en-IN")}</div>
+                      <span className={`order-status ${order.status.toLowerCase()}`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="order-list-item">
-                <div>
-                  <div className="order-id">#SAW-2024-1832</div>
-                  <div className="order-date">March 8, 2024</div>
-                </div>
-                <span className="order-status shipped">Shipped</span>
-              </div>
-              <div className="order-list-item">
-                <div>
-                  <div className="order-id">#SAW-2024-1819</div>
-                  <div className="order-date">February 28, 2024</div>
-                </div>
-                <span className="order-status delivered">Delivered</span>
-              </div>
-              <div className="order-list-item">
-                <div>
-                  <div className="order-id">#SAW-2024-1805</div>
-                  <div className="order-date">February 14, 2024</div>
-                </div>
-                <span className="order-status processing">Processing</span>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Saved Addresses */}
@@ -118,30 +145,10 @@ export default function AccountPage() {
                   letterSpacing: "0.1em", fontWeight: 700,
                   color: "var(--secondary)", marginBottom: "0.5rem"
                 }}>
-                  Home
+                  Primary
                 </div>
                 <p style={{ fontSize: "0.85rem", color: "var(--on-surface-variant)", lineHeight: 1.5 }}>
-                  123 Fragrance Lane<br />
-                  Old City, Hyderabad<br />
-                  Telangana 500002
-                </p>
-              </div>
-              <div style={{
-                padding: "1.25rem",
-                background: "var(--surface-container-low)",
-                borderRadius: "var(--radius-md)"
-              }}>
-                <div style={{
-                  fontSize: "0.7rem", textTransform: "uppercase",
-                  letterSpacing: "0.1em", fontWeight: 700,
-                  color: "var(--secondary)", marginBottom: "0.5rem"
-                }}>
-                  Business
-                </div>
-                <p style={{ fontSize: "0.85rem", color: "var(--on-surface-variant)", lineHeight: 1.5 }}>
-                  456 Commerce Street<br />
-                  Banjara Hills, Hyderabad<br />
-                  Telangana 500034
+                  Add your shipping address during your next checkout to save it here.
                 </p>
               </div>
             </div>

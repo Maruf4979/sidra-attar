@@ -1,9 +1,6 @@
-"use client";
-
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
 import FilteredCollection from "../components/FilteredCollection";
-import { products } from "../data/products";
+import { getAllProducts } from "../lib/products";
 
 function CustomerServiceContent() {
   return (
@@ -38,14 +35,14 @@ function CustomerServiceContent() {
   );
 }
 
-function CollectionsContent() {
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("cat") || "All";
+async function CollectionsContent({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const activeCategory = (searchParams.cat as string) || "All";
 
   if (activeCategory === "Customer Service") {
     return <CustomerServiceContent />;
   }
 
+  const products = await getAllProducts();
   const filtered =
     activeCategory === "All"
       ? products
@@ -67,10 +64,16 @@ function CollectionsContent() {
   );
 }
 
-export default function CollectionsPage() {
+export default async function CollectionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  
   return (
-    <Suspense fallback={<div className="section text-center" style={{ padding: "4rem 0" }}>Loading...</div>}>
-      <CollectionsContent />
+    <Suspense fallback={<div className="section text-center" style={{ padding: "4rem 0" }}>Loading products...</div>}>
+      <CollectionsContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
