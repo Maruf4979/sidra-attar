@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import HeroCarousel from "./HeroCarousel";
+import OfferTicker from "./OfferTicker";
 import { Product } from "../lib/products";
 import { categories } from "../data/products";
 
@@ -151,7 +152,12 @@ export default function FilteredCollection({
 
   return (
     <>
-      {showHeroCarousel && <HeroCarousel />}
+      {showHeroCarousel && (
+        <>
+          <HeroCarousel />
+          <OfferTicker />
+        </>
+      )}
       
       <div className="collections-layout section" style={{ paddingTop: showHeroCarousel ? "2rem" : undefined }}>
         {/* Sticky Filter Sidebar */}
@@ -278,15 +284,6 @@ export default function FilteredCollection({
               <p style={{ textAlign: "left", margin: "0" }}>{description}</p>
             </div>
             
-            {/* Advertisement Ticker */}
-            <div className="promo-ticker-wrapper">
-              <div className="promo-ticker-content">
-                <span>✨ Limited Time Offer: Get 20% OFF on all Luxury Perfumes! Use code: LUX20 ✨</span>
-                <span>🚚 Free Shipping on all orders above ₹999! 🚚</span>
-                <span>🎁 Special Gift Hamper with every Nikah Set purchase! 🎁</span>
-                <span>📜 Authentic Islamic Books with Hindi/Urdu translations available! 📜</span>
-              </div>
-            </div>
           </div>
 
           <div className="product-grid">

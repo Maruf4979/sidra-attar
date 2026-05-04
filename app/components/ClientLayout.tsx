@@ -7,18 +7,22 @@ import CartDrawer from "./CartDrawer";
 import AuthProvider from "./AuthProvider";
 import { CartProvider } from "../context/CartContext";
 import { ThemeProvider } from "../context/ThemeContext";
+import { usePathname } from "next/navigation";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAuthPage = pathname === "/auth/signin" || pathname === "/auth/signup";
+
   return (
     <AuthProvider>
       <ThemeProvider>
         <CartProvider>
           <Suspense fallback={<div className="site-header" style={{ height: '110px' }} />}>
-            <Header />
+            {!isAuthPage && <Header />}
           </Suspense>
           <CartDrawer />
           <main style={{ flex: 1 }}>{children}</main>
-          <Footer />
+          {!isAuthPage && <Footer />}
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>

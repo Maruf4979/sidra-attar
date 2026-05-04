@@ -3300,3 +3300,95 @@ input, textarea, select {
   }
 }
 
+
+/* ===========================
+   24. OFFER TICKER (Movable Ads)
+   =========================== */
+.offer-ticker-container {
+  width: 100%;
+  overflow: hidden;
+  background: var(--primary-container);
+  border-bottom: 1px solid var(--outline);
+  padding: 10px 0;
+  position: relative;
+  z-index: 10;
+}
+
+.offer-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: scroll-ticker 40s linear infinite;
+}
+
+.offer-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+.offer-ticker-item {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  white-space: nowrap;
+  color: var(--on-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  gap: 12px;
+}
+
+.offer-icon {
+  font-size: 1.2rem;
+}
+
+.offer-code {
+  background: var(--secondary);
+  color: var(--on-secondary);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.offer-separator {
+  margin-left: 20px;
+  opacity: 0.3;
+}
+
+@keyframes scroll-ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===========================
+   25. UTILITIES FOR PREMIUM UI
+   =========================== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark .glass-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.premium-gradient-bg {
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+}
+
+.gold-glow {
+  box-shadow: 0 0 15px rgba(254, 189, 105, 0.2);
+}
+
+.luxury-text {
+  background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

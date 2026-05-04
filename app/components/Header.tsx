@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "../context/CartContext";
 import { useTheme } from "../context/ThemeContext";
+import LocationModal from "./LocationModal";
 
 export default function Header() {
   const { totalItems, setIsOpen } = useCart();
@@ -15,6 +16,18 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchParams = useSearchParams();
   const currentCat = searchParams ? searchParams.get('cat') : '';
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [userLocation, setUserLocation] = useState("Mumbai");
+
+  useEffect(() => {
+    const savedLocation = localStorage.getItem("user-location");
+    if (savedLocation) setUserLocation(savedLocation);
+  }, []);
+
+  const handleLocationSelect = (city: string) => {
+    setUserLocation(city);
+    localStorage.setItem("user-location", city);
+  };
 
   const userName = session?.user?.name || session?.user?.email?.split("@")[0] || "";
   const isLoggedIn = status === "authenticated";
@@ -92,16 +105,20 @@ export default function Header() {
               )}
             </button>
 
-            <Link href="/account" className="header-icon-btn location-btn hide-mobile" style={{ flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+            <button 
+              onClick={() => setIsLocationModalOpen(true)}
+              className="header-icon-btn location-btn hide-mobile" 
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: '2px' }}>
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
-              <div className="location-text">
-                <span className="header-icon-subtext">Delivering to Mumbai</span>
-                <span className="header-icon-text">Update location</span>
+              <div className="location-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1.2' }}>
+                <span className="header-icon-subtext" style={{ whiteSpace: 'nowrap' }}>Delivering to {userLocation}</span>
+                <span className="header-icon-text" style={{ whiteSpace: 'nowrap' }}>Update location</span>
               </div>
-            </Link>
+            </button>
 
             {/* Auth-aware Account Link */}
             <Link href={isLoggedIn ? "/account" : "/auth/signin"} className="header-icon-btn">
@@ -257,6 +274,11 @@ export default function Header() {
           </div>
         </div>
       </div>
+      <LocationModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)} 
+        onSelect={handleLocationSelect} 
+      />
     </>
   );
 }
