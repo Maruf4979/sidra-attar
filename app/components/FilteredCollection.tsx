@@ -294,7 +294,7 @@ export default function FilteredCollection({
 
           {filtered.length === 0 && (
             <div className="text-center" style={{ padding: "4rem 0" }}>
-              <p style={{ color: "var(--outline)" }}>
+              <p style={{ color: "var(--on-surface-variant)" }}>
                 No products found matching your filters in this category.
               </p>
             </div>

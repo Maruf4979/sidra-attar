@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
 import AvatarUploader from "@/app/components/AvatarUploader";
+import ProfileDetailsForm from "@/app/components/ProfileDetailsForm";
 import { redirect } from "next/navigation";
 
 export default async function AccountPage() {
@@ -104,15 +105,21 @@ export default async function AccountPage() {
             </div>
           </div>
 
+          {/* Profile Details */}
+          <div className="account-card">
+            <h3>Profile Details</h3>
+            <ProfileDetailsForm initialName={user.name || ""} />
+          </div>
+
           {/* Recent Orders */}
           <div className="account-card">
             <h3>Recent Orders</h3>
             {orders.length === 0 ? (
-              <p style={{ color: "var(--outline)", fontSize: "0.9rem" }}>No recent orders found.</p>
+              <p style={{ color: "var(--on-surface-variant)", fontSize: "0.9rem" }}>No recent orders found.</p>
             ) : (
               <div className="order-list">
                 {orders.map((order) => (
-                  <div key={order.id} className="order-list-item">
+                  <Link key={order.id} href={`/account/orders/${order.id}`} className="order-list-item" style={{ textDecoration: "none", color: "inherit" }}>
                     <div>
                       <div className="order-id">#{order.id.slice(0, 8).toUpperCase()}</div>
                       <div className="order-date">
@@ -125,7 +132,7 @@ export default async function AccountPage() {
                         {order.status}
                       </span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
 
-export async function POST(request: Request) {
+export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -11,23 +11,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { imageUrl } = body;
+    const { name } = await req.json();
 
-    if (!imageUrl) {
-      return NextResponse.json({ error: "No image URL provided" }, { status: 400 });
+    if (!name || typeof name !== "string") {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
-      data: { image: imageUrl },
+      data: { name },
     });
 
-    return NextResponse.json({ user: updatedUser });
+    return NextResponse.json({
+      success: true,
+      user: { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email },
+    });
   } catch (error) {
     console.error("Profile update error:", error);
     return NextResponse.json(
-      { error: "Failed to update profile" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

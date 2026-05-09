@@ -38,7 +38,7 @@ function SuccessContent() {
         <h2 style={{ fontFamily: "var(--font-headline)", marginBottom: "0.75rem", fontSize: "1.75rem" }}>
           {isCOD ? "Order Placed Successfully" : "Payment Successful"}
         </h2>
-        <p style={{ color: "var(--outline)", marginBottom: "0.5rem", maxWidth: "500px", margin: "0 auto 1.5rem" }}>
+        <p style={{ color: "var(--on-surface-variant)", marginBottom: "0.5rem", maxWidth: "500px", margin: "0 auto 1.5rem" }}>
           {isCOD 
             ? "Your order has been received and will be processed soon. Cash will be collected upon delivery." 
             : "Your order has been placed and payment has been received. We'll send you an email confirmation shortly."

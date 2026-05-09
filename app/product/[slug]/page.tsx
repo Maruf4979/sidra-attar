@@ -18,7 +18,7 @@ export default async function ProductDetailPage({
         <h1 style={{ fontFamily: "var(--font-headline)", marginBottom: "1rem" }}>
           Product Not Found
         </h1>
-        <p style={{ color: "var(--outline)", marginBottom: "2rem" }}>
+        <p style={{ color: "var(--on-surface-variant)", marginBottom: "2rem" }}>
           The product you&apos;re looking for doesn&apos;t exist in our database.
         </p>
         <Link href="/collections" className="btn-primary">

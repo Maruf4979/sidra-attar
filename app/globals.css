@@ -12,8 +12,8 @@
   /* Colors — Amazon-inspired Light Palette */
   --primary: #131921;
   --primary-container: #232f3e;
-  --secondary: #febd69;
-  --secondary-container: #f0c14b;
+  --secondary: #e47911;
+  --secondary-container: #cc6600;
   --tertiary: #00a8e1;
 
   --surface: #ffffff;
@@ -26,7 +26,7 @@
   --surface-container-highest: #d5d9d9;
 
   --on-surface: #0f1111;
-  --on-surface-variant: #565959;
+  --on-surface-variant: #444444;
   --on-primary: #ffffff;
   --on-secondary: #0f1111;
 
@@ -1300,7 +1300,7 @@ input, textarea, select {
 }
 
 .product-strip-container::-webkit-scrollbar-thumb {
-  background-color: var(--outline);
+  background-color: var(--on-surface-variant);
   border-radius: var(--radius-full);
 }
 
@@ -1761,7 +1761,7 @@ input, textarea, select {
 
 .page-header p {
   font-size: 1.05rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
@@ -1865,7 +1865,7 @@ input, textarea, select {
 
 .pdp-price-label {
   font-size: 0.75rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -1893,7 +1893,7 @@ input, textarea, select {
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -1951,7 +1951,7 @@ input, textarea, select {
 
 .wholesale-tier .tier-qty {
   font-size: 0.7rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   font-weight: 600;
 }
 
@@ -2111,7 +2111,7 @@ input, textarea, select {
 
 .order-item-details p {
   font-size: 0.75rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
 }
 
 .order-item-price {
@@ -2132,7 +2132,7 @@ input, textarea, select {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
 }
 
 .order-total-row.grand {
@@ -2212,7 +2212,7 @@ input, textarea, select {
 
 .contact-card p {
   font-size: 0.85rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   line-height: 1.5;
 }
 
@@ -2323,7 +2323,7 @@ input, textarea, select {
 .tier-discount {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--secondary);
+  color: var(--primary);
   margin-bottom: var(--space-md);
 }
 
@@ -2341,7 +2341,7 @@ input, textarea, select {
 
 .tier-features li {
   font-size: 0.85rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2399,7 +2399,7 @@ input, textarea, select {
 }
 
 .account-sidebar a.active {
-  color: var(--secondary);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -2453,7 +2453,7 @@ input, textarea, select {
 
 .account-welcome p {
   font-size: 0.85rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
 }
 
 .account-stats {
@@ -2474,14 +2474,14 @@ input, textarea, select {
   font-family: var(--font-headline);
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--secondary);
+  color: var(--primary);
 }
 
 .account-stat .label {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   font-weight: 600;
 }
 
@@ -2555,7 +2555,7 @@ input, textarea, select {
 
 .order-date {
   font-size: 0.75rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
 }
 
 .order-status {
@@ -2574,7 +2574,7 @@ input, textarea, select {
 
 .order-status.processing {
   background: rgba(197, 160, 89, 0.15);
-  color: var(--secondary);
+  color: var(--primary);
 }
 
 .order-status.shipped {
@@ -2762,7 +2762,7 @@ input, textarea, select {
 
 .product-card-original-price {
   font-size: 0.85rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   text-decoration: line-through;
   font-weight: 400;
 }
@@ -2782,7 +2782,7 @@ input, textarea, select {
 
 .pdp-original-price {
   font-size: 1.1rem;
-  color: var(--outline);
+  color: var(--on-surface-variant);
   text-decoration: line-through;
   font-weight: 400;
 }
@@ -3392,3 +3392,331 @@ input, textarea, select {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* ===========================
+   ORDER DETAIL PAGE
+   =========================== */
+.order-timeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  padding: 1rem 0;
+}
+
+.order-timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.order-timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-container);
+  border: 2px solid var(--outline-variant);
+  color: var(--on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.order-timeline-step.completed .order-timeline-dot {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.order-timeline-step.current .order-timeline-dot {
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb, 139, 92, 246), 0.2);
+  transform: scale(1.1);
+}
+
+.order-timeline-line {
+  position: absolute;
+  top: 18px;
+  left: calc(50% + 18px);
+  width: calc(100% - 36px);
+  height: 2px;
+  background: var(--outline-variant);
+  z-index: 1;
+}
+
+.order-timeline-line.completed {
+  background: var(--primary);
+}
+
+.order-timeline-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+  text-align: center;
+}
+
+.order-timeline-step.completed .order-timeline-label {
+  color: var(--on-surface);
+  font-weight: 500;
+}
+
+.order-timeline-icon {
+  font-size: 1rem;
+}
+
+.order-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.order-detail-item {
+  padding: 1rem;
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+}
+
+.order-detail-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.order-detail-value {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.order-detail-product {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--surface-container-low);
+}
+
+.order-detail-product:last-child {
+  border-bottom: none;
+}
+
+.order-detail-product-swatch {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.order-detail-totals {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-detail-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--on-surface-variant);
+}
+
+.order-detail-total-row.grand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--on-surface);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--outline-variant);
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .order-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-timeline {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .order-timeline-step {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .order-timeline-line {
+    position: static;
+    width: 2px;
+    height: 24px;
+    margin: 0 auto;
+  }
+
+  .order-timeline-label {
+    flex-direction: row;
+    margin-top: 0;
+  }
+}
+
+/* ===========================
+   PAYMENT METHOD OPTIONS
+   =========================== */
+.payment-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--surface-container-low);
+  borderRadius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.payment-option[data-active="true"] {
+  background: var(--surface-container);
+  border-color: var(--primary);
+}
+
+.payment-option:hover {
+  background: var(--surface-container);
+}
+
+.payment-option input[type="radio"] {
+  accent-color: var(--primary);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.payment-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.payment-option-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.payment-option-desc {
+  font-size: 0.78rem;
+  color: var(--on-surface-variant);
+  font-weight: 400;
+}
+
+.payment-detail-panel {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--outline-variant);
+  animation: fadeIn 0.25s ease;
+}
+
+.payment-upi-section {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.payment-upi-qr {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-upi-info {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .payment-upi-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* ===========================
+   COD CONFIRMATION MODAL
+   =========================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+}
+
+.cod-confirm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  max-width: 420px;
+  width: 90%;
+  z-index: 1000;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--outline-variant);
+  animation: fadeInScale 0.3s ease;
+}
+
+.cod-confirm-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--primary-container);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+/* ===========================
+   ORDER CARD HOVER
+   =========================== */
+.order-card-hover:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-list-item {
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.order-list-item:hover {
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+}
+

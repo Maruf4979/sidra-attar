@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { items } = body;
+    const { items, paymentMethod } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -35,12 +35,16 @@ export async function POST(request: Request) {
     const shipping = subtotal >= 999 ? 0 : 99;
     const totalAmount = subtotal + shipping;
 
+    const method = paymentMethod === "UPI" ? "UPI" : "COD";
+    const status = method === "UPI" ? "PENDING_UPI" : "PENDING_COD";
+
     // Create order
     const order = await prisma.order.create({
       data: {
         userId: user.id,
         totalAmount: totalAmount,
-        status: "PENDING_COD", // Distinct status for COD
+        paymentMethod: method,
+        status: status,
         items: {
           create: items.map((item: any) => ({
             productId: item.id,

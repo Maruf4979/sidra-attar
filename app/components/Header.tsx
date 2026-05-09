@@ -61,7 +61,7 @@ export default function Header() {
 
           {/* Search Bar */}
           <div className="header-search">
-            <select className="header-search-select" aria-label="Search dropdown">
+            <select className="header-search-select" aria-label="Search dropdown" suppressHydrationWarning>
               <option value="all">All</option>
               <option value="attars">Attars</option>
               <option value="perfumes">Perfumes</option>
@@ -76,6 +76,7 @@ export default function Header() {
               type="text" 
               className="header-search-input" 
               placeholder="Search Sidra Attar Wala" 
+              suppressHydrationWarning
             />
             <button className="header-search-btn" aria-label="Search button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -187,6 +188,7 @@ export default function Header() {
             <Link href="/collections?cat=Prayer+Namaz" className={(currentCat === "Prayer Namaz" || currentCat === "Prayer / Namaz") ? "active-nav" : ""}>Prayer / Namaz</Link>
             <Link href="/collections?cat=Islamic+Books" className={currentCat === "Islamic Books" ? "active-nav" : ""}>Islamic Books</Link>
             <Link href="/collections?cat=Customer+Service" className={currentCat === "Customer Service" ? "active-nav" : ""}>Customer Service</Link>
+            <Link href="/about">About Us</Link>
           </nav>
         </div>
       </header>
@@ -256,6 +258,7 @@ export default function Header() {
             <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Your Account</Link>
             <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Returns & Orders</Link>
             <Link href="/account" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Delivery Location</Link>
+            <Link href="/about" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
             <Link href="/collections?cat=Customer+Service" className="side-drawer-link" onClick={() => setMobileMenuOpen(false)}>Customer Service</Link>
             <button className="side-drawer-link" style={{ width: '100%' }} onClick={() => { toggleTheme(); setMobileMenuOpen(false); }}>
               Toggle Theme ({theme === 'dark' ? 'Light Mode' : 'Dark Mode'})

@@ -66,6 +66,7 @@ export async function POST(request: Request) {
       data: {
         userId: user.id,
         totalAmount: totalAmount,
+        paymentMethod: "CARD",
         status: "PENDING",
         items: {
           create: items.map((item: any) => ({

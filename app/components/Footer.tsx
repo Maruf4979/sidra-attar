@@ -67,7 +67,7 @@ export default function Footer() {
           <h4 className="footer-col-title">Stay Connected</h4>
           <p>Join our newsletter for exclusive launches and heritage stories.</p>
           <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Your email address" aria-label="Email" />
+            <input type="email" placeholder="Your email address" aria-label="Email" suppressHydrationWarning />
             <button type="submit">Subscribe</button>
           </form>
         </div>
