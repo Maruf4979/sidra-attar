@@ -37,27 +37,41 @@ function CustomerServiceContent() {
 
 async function CollectionsContent({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const activeCategory = (searchParams.cat as string) || "All";
+  const searchQuery = (searchParams.search as string) || "";
 
   if (activeCategory === "Customer Service") {
     return <CustomerServiceContent />;
   }
 
   const products = await getAllProducts();
-  const filtered =
+  let filtered =
     activeCategory === "All"
       ? products
       : products.filter((p) => p.category === activeCategory);
 
-  const title = activeCategory === "All" ? "All Products" : activeCategory;
-  const description = activeCategory === "All" 
-    ? "Discover our complete collection of premium attars, perfumes, cosmetics, and more."
-    : `Explore our premium collection of ${activeCategory}.`;
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter((p) => 
+      p.name.toLowerCase().includes(q) || 
+      p.category.toLowerCase().includes(q) ||
+      (p.description && p.description.toLowerCase().includes(q)) ||
+      (p.tags && p.tags.some(tag => tag.toLowerCase().includes(q)))
+    );
+  }
+
+  const title = activeCategory === "All" && !searchQuery ? "All Products" : 
+                searchQuery ? `Search Results for "${searchQuery}"` : activeCategory;
+  const description = searchQuery 
+    ? `Showing results for your search query: ${searchQuery}`
+    : activeCategory === "All" 
+      ? "Discover our complete collection of premium attars, perfumes, cosmetics, and more."
+      : `Explore our premium collection of ${activeCategory}.`;
 
   return (
     <FilteredCollection
       initialProducts={filtered}
       activeCategory={activeCategory}
-      showHeroCarousel={activeCategory === "All"}
+      showHeroCarousel={activeCategory === "All" && !searchQuery}
       title={title}
       description={description}
     />

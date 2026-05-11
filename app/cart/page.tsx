@@ -34,6 +34,7 @@ export default function CartPage() {
           items: items.map((item) => ({
             id: item.id,
             name: item.name,
+            slug: item.slug,
             price: item.price,
             quantity: item.quantity,
           })),
@@ -71,6 +72,7 @@ export default function CartPage() {
           items: items.map((item) => ({
             id: item.id,
             name: item.name,
+            slug: item.slug,
             price: item.price,
             quantity: item.quantity,
           })),

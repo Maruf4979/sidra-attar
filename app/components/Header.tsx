@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "../context/CartContext";
 import { useTheme } from "../context/ThemeContext";
@@ -15,9 +15,33 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const currentCat = searchParams ? searchParams.get('cat') : '';
+  const initialSearch = searchParams ? searchParams.get('search') : '';
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [userLocation, setUserLocation] = useState("Mumbai");
+  const [searchQuery, setSearchQuery] = useState(initialSearch || "");
+  const [searchCat, setSearchCat] = useState(currentCat || "all");
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim() && searchCat === "all") {
+      router.push("/collections?cat=All");
+      return;
+    }
+    
+    let url = "/collections?";
+    const params = new URLSearchParams();
+    if (searchCat !== "all") {
+      params.append("cat", searchCat);
+    } else {
+      params.append("cat", "All");
+    }
+    if (searchQuery.trim()) {
+      params.append("search", searchQuery.trim());
+    }
+    router.push(url + params.toString());
+  };
 
   useEffect(() => {
     const savedLocation = localStorage.getItem("user-location");
@@ -60,31 +84,38 @@ export default function Header() {
           </Link>
 
           {/* Search Bar */}
-          <div className="header-search">
-            <select className="header-search-select" aria-label="Search dropdown" suppressHydrationWarning>
+          <form className="header-search" onSubmit={handleSearchSubmit}>
+            <select 
+              className="header-search-select" 
+              aria-label="Search dropdown" 
+              suppressHydrationWarning
+              value={searchCat}
+              onChange={(e) => setSearchCat(e.target.value)}
+            >
               <option value="all">All</option>
-              <option value="attars">Attars</option>
-              <option value="perfumes">Perfumes</option>
-              <option value="cosmetics">Cosmetics</option>
-              <option value="gifts">Gifts</option>
-              <option value="nikah">Sadi / Nikah</option>
-              <option value="namaz">Prayer / Namaz</option>
-              <option value="books">Islamic Books</option>
-              <option value="fancy">Fancy Items</option>
+              <option value="Attars">Attars</option>
+              <option value="Luxury Perfumes">Perfumes</option>
+              <option value="Cosmetics">Cosmetics</option>
+              <option value="Gift Hampers">Gifts</option>
+              <option value="Sadi Nikah Special">Sadi / Nikah</option>
+              <option value="Prayer Namaz">Prayer / Namaz</option>
+              <option value="Islamic Books">Islamic Books</option>
             </select>
             <input 
               type="text" 
               className="header-search-input" 
               placeholder="Search Sidra Attar Wala" 
               suppressHydrationWarning
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="header-search-btn" aria-label="Search button">
+            <button type="submit" className="header-search-btn" aria-label="Search button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
             </button>
-          </div>
+          </form>
 
           {/* Actions */}
           <div className="header-actions">

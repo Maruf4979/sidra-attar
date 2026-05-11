@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
+import { insforge } from "@/app/lib/insforge";
 import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
@@ -42,6 +43,42 @@ export async function POST(request: Request) {
         hashedPassword,
       },
     });
+
+    // Synchronize with InsForge Authentication and Database
+    try {
+      const { data: insData, error: insforgeError } = await insforge.auth.signUp({
+        email,
+        password, // Raw password for InsForge to hash
+        name,
+      });
+
+      if (insforgeError) {
+        console.error("InsForge registration error:", insforgeError);
+      } else if (insData?.user) {
+        console.log("InsForge registration successful for:", email);
+        
+        // Create a record in the customers table in InsForge
+        const firstName = name?.split(' ')[0] || 'User';
+        const lastName = name?.split(' ').slice(1).join(' ') || '';
+        
+        const { error: customerError } = await insforge.database
+          .from('customers')
+          .insert({
+            user_id: insData.user.id,
+            first_name: firstName,
+            last_name: lastName,
+            // phone and address can be updated later
+          });
+
+        if (customerError) {
+          console.error("InsForge customer creation error:", customerError);
+        } else {
+          console.log("InsForge customer record created for:", email);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to sync with InsForge:", err);
+    }
 
     console.log("Registration successful for:", email);
 

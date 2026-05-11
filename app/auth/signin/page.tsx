@@ -80,6 +80,7 @@ export default function SignInPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="email@example.com"
                   required
+                  data-testid="login-email"
                 />
               </div>
             </div>
@@ -101,6 +102,7 @@ export default function SignInPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  data-testid="login-password"
                 />
               </div>
             </div>
@@ -109,6 +111,7 @@ export default function SignInPage() {
               type="submit"
               className="auth-primary-btn"
               disabled={loading}
+              data-testid="login-submit"
             >
               {loading ? "Verifying..." : "Sign In"}
             </button>

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
+import { insforge } from "@/app/lib/insforge";
+
 
 export async function POST(request: Request) {
   try {
@@ -54,6 +56,75 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    // Synchronize with InsForge
+    try {
+      // 1. Ensure InsForge customer exists
+      let { data: customer, error: customerFetchError } = await insforge.database
+        .from('customers')
+        .select('id')
+        .eq('user_id', user.id) // Using Prisma user.id as a temporary fallback or we need to search by email
+        .maybeSingle();
+
+      // Better: search by user email if not found by user.id
+      if (!customer) {
+        const { data: insAuthUser } = await insforge.auth.getUserByEmail(session.user.email);
+        if (insAuthUser) {
+           const { data: existingCustomer } = await insforge.database
+            .from('customers')
+            .select('id')
+            .eq('user_id', insAuthUser.id)
+            .maybeSingle();
+           customer = existingCustomer;
+        }
+      }
+
+      if (customer) {
+        // 2. Create InsForge order
+        const { data: insOrder, error: insOrderError } = await insforge.database
+          .from('orders')
+          .insert({
+            customer_id: customer.id,
+            total_amount: totalAmount,
+            status: status.toLowerCase().includes('pending') ? 'pending' : status,
+            shipping_address: 'See session data', // Optional: could fetch from user profile
+            prisma_order_id: order.id,
+          })
+          .select()
+          .single();
+
+        if (!insOrderError && insOrder) {
+          // 3. Create InsForge order items
+          const insItems = [];
+          for (const item of items) {
+             // Find InsForge product by SKU (slug)
+             const { data: product } = await insforge.database
+               .from('products')
+               .select('id')
+               .eq('sku', item.slug) // Assumes item.slug is passed in the request
+               .maybeSingle();
+
+             if (product) {
+               insItems.push({
+                 order_id: insOrder.id,
+                 product_id: product.id,
+                 quantity: item.quantity,
+                 unit_price: item.price
+               });
+             }
+          }
+
+          if (insItems.length > 0) {
+            await insforge.database.from('order_items').insert(insItems);
+          }
+          console.log("InsForge order synchronized successfully");
+        } else {
+          console.error("InsForge order creation error:", insOrderError);
+        }
+      }
+    } catch (syncErr) {
+      console.error("InsForge sync error:", syncErr);
+    }
 
     return NextResponse.json({ 
       success: true, 

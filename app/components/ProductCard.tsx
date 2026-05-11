@@ -69,6 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
               addItem({
                 id: product.id,
                 name: product.name,
+                slug: product.slug,
                 price: product.price,
                 gradient: product.gradient,
               })
