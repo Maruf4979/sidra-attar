@@ -93,14 +93,17 @@ export const authOptions: NextAuthOptions = {
       console.log(`Syncing user to InsForge: ${user.email}`);
       
       try {
-        // 1. Check if user exists in InsForge Auth
-        const { data: existingInsUser } = await insforge.auth.getUserByEmail(user.email);
+        // 1. Check if customer exists in InsForge DB by email
+        const { data: customer } = await insforge.database
+          .from('customers')
+          .select('id, user_id')
+          .eq('email', user.email)
+          .maybeSingle();
         
         let insUserId: string;
 
-        if (!existingInsUser) {
+        if (!customer) {
           // Create new InsForge Auth user for Google/OAuth signups
-          // Generate a random password for shadow account
           const randomPassword = crypto.randomBytes(16).toString('hex');
           const { data: newUser, error: signUpError } = await insforge.auth.signUp({
             email: user.email,
@@ -110,21 +113,17 @@ export const authOptions: NextAuthOptions = {
 
           if (signUpError) {
             console.error("InsForge auto-signup error:", signUpError);
-            return;
+            // Fallback: if user already exists in Auth but not in our customers table
+            const { data: authUser } = await insforge.database.from('users').select('id').eq('email', user.email).maybeSingle();
+            if (authUser) {
+                insUserId = authUser.id;
+            } else {
+                return;
+            }
+          } else {
+            insUserId = newUser!.user!.id;
           }
-          insUserId = newUser!.user!.id;
-        } else {
-          insUserId = existingInsUser.id;
-        }
 
-        // 2. Ensure customer record exists in InsForge DB
-        const { data: customer } = await insforge.database
-          .from('customers')
-          .select('id')
-          .eq('user_id', insUserId)
-          .maybeSingle();
-
-        if (!customer) {
           const firstName = user.name?.split(' ')[0] || 'User';
           const lastName = user.name?.split(' ').slice(1).join(' ') || '';
           
@@ -132,10 +131,11 @@ export const authOptions: NextAuthOptions = {
             .from('customers')
             .insert({
               user_id: insUserId,
+              email: user.email,
               first_name: firstName,
               last_name: lastName,
             });
-          console.log("InsForge customer record created for OAuth user");
+          console.log("InsForge customer record created for user");
         }
       } catch (err) {
         console.error("InsForge sync event error:", err);

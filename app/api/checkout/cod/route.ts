@@ -59,25 +59,12 @@ export async function POST(request: Request) {
 
     // Synchronize with InsForge
     try {
-      // 1. Ensure InsForge customer exists
-      let { data: customer, error: customerFetchError } = await insforge.database
+      // 1. Ensure InsForge customer exists (Search by email)
+      const { data: customer } = await insforge.database
         .from('customers')
         .select('id')
-        .eq('user_id', user.id) // Using Prisma user.id as a temporary fallback or we need to search by email
+        .eq('email', session.user.email)
         .maybeSingle();
-
-      // Better: search by user email if not found by user.id
-      if (!customer) {
-        const { data: insAuthUser } = await insforge.auth.getUserByEmail(session.user.email);
-        if (insAuthUser) {
-           const { data: existingCustomer } = await insforge.database
-            .from('customers')
-            .select('id')
-            .eq('user_id', insAuthUser.id)
-            .maybeSingle();
-           customer = existingCustomer;
-        }
-      }
 
       if (customer) {
         // 2. Create InsForge order

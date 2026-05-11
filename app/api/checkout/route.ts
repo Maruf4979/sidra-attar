@@ -102,24 +102,12 @@ export async function POST(request: Request) {
 
     // Synchronize with InsForge
     try {
-      // 1. Ensure InsForge customer exists
-      let { data: customer } = await insforge.database
+      // 1. Ensure InsForge customer exists (Search by email)
+      const { data: customer } = await insforge.database
         .from('customers')
         .select('id')
-        .eq('user_id', user.id)
+        .eq('email', session.user.email)
         .maybeSingle();
-
-      if (!customer) {
-        const { data: insAuthUser } = await insforge.auth.getUserByEmail(session.user.email);
-        if (insAuthUser) {
-           const { data: existingCustomer } = await insforge.database
-            .from('customers')
-            .select('id')
-            .eq('user_id', insAuthUser.id)
-            .maybeSingle();
-           customer = existingCustomer;
-        }
-      }
 
       if (customer) {
         // 2. Create InsForge order
