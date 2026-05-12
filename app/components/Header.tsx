@@ -19,6 +19,7 @@ export default function Header() {
   const currentCat = searchParams ? searchParams.get('cat') : '';
   const initialSearch = searchParams ? searchParams.get('search') : '';
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userLocation, setUserLocation] = useState("Mumbai");
   const [searchQuery, setSearchQuery] = useState(initialSearch || "");
   const [searchCat, setSearchCat] = useState(currentCat || "all");
@@ -152,13 +153,73 @@ export default function Header() {
               </div>
             </button>
 
-            {/* Auth-aware Account Link */}
-            <Link href={isLoggedIn ? "/account" : "/auth/signin"} className="header-icon-btn">
-              <span className="header-icon-subtext">
-                {isLoggedIn ? `Hello, ${userName}` : "Hello, sign in"}
-              </span>
-              <span className="header-icon-text">Account</span>
-            </Link>
+            {/* Auth-aware Account Dropdown */}
+            {isLoggedIn ? (
+              <div className="header-profile-dropdown-wrapper">
+                <button 
+                  className="header-profile-trigger"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  aria-label="User profile menu"
+                >
+                  <div className="profile-avatar">
+                    {session?.user?.image ? (
+                      <img src={session.user.image} alt={userName} />
+                    ) : (
+                      <span>{userName.charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                  <div className="profile-text hide-mobile">
+                    <span className="header-icon-subtext">Hello, {userName.split(' ')[0]}</span>
+                    <span className="header-icon-text">Account & Lists</span>
+                  </div>
+                </button>
+
+                {dropdownOpen && (
+                  <>
+                    <div className="dropdown-overlay" onClick={() => setDropdownOpen(false)} />
+                    <div className="profile-dropdown-menu glass-premium">
+                      <div className="dropdown-header">
+                        <span className="user-name">{userName}</span>
+                        <span className="user-email">{session?.user?.email}</span>
+                      </div>
+                      <div className="dropdown-divider" />
+                      <Link href="/account" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        Your Profile
+                      </Link>
+                      <Link href="/account" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                          <line x1="3" y1="6" x2="21" y2="6" />
+                          <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                        Your Orders
+                      </Link>
+                      <div className="dropdown-divider" />
+                      <button 
+                        className="dropdown-item signout-btn" 
+                        onClick={() => { signOut(); setDropdownOpen(false); }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                          <polyline points="16 17 21 12 16 7" />
+                          <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <Link href="/auth/signin" className="header-icon-btn">
+                <span className="header-icon-subtext">Hello, sign in</span>
+                <span className="header-icon-text">Account</span>
+              </Link>
+            )}
 
             <Link href="/account" className="header-icon-btn hide-mobile">
               <span className="header-icon-subtext">Returns</span>

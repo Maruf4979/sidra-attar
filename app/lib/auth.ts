@@ -108,11 +108,11 @@ export const authOptions: NextAuthOptions = {
 
           // Update InsForge Auth status via RPC
           try {
-            await (insforgeAdmin.database as any).rpc('confirm_google_user', { 
+            await (insforgeAdmin.database as any).rpc('confirm_user_email', { 
               user_email: user.email 
             });
           } catch (rpcErr) {
-            console.error("InsForge RPC error (confirm_google_user):", rpcErr);
+            console.error("InsForge RPC error (confirm_user_email):", rpcErr);
           }
         }
 

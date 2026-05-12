@@ -76,6 +76,17 @@ export async function POST(request: Request) {
           console.log("InsForge customer record created for:", email);
         }
       }
+      
+      // Auto-confirm user email in InsForge
+      try {
+        const { error: confirmError } = await insforge.rpc('confirm_user_email', { 
+          user_email: email 
+        });
+        if (confirmError) console.error("InsForge confirm error:", confirmError);
+        else console.log("InsForge email auto-verified for:", email);
+      } catch (confirmErr) {
+        console.error("Failed to auto-verify email:", confirmErr);
+      }
     } catch (err) {
       console.error("Failed to sync with InsForge:", err);
     }
