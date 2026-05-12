@@ -91,7 +91,7 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user, account }) {
-      if (!user.email) return true;
+      if (!user.email) return;
 
       console.log(`Syncing user to InsForge: ${user.email}`);
       
@@ -137,7 +137,7 @@ export const authOptions: NextAuthOptions = {
 
           if (signUpError) {
             console.error("InsForge auto-signup error (possibly exists):", signUpError.message);
-            return true;
+            return;
           } else {
             insUserId = newUser!.user!.id;
           }
@@ -160,7 +160,6 @@ export const authOptions: NextAuthOptions = {
       } catch (err) {
         console.error("InsForge sync event error:", err);
       }
-      return true;
     }
   },
   secret: process.env.NEXTAUTH_SECRET,
