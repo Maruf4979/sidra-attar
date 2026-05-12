@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     // 1. Upload to InsForge Storage
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileExt = file.name.split('.').pop();
-    const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
+    const fileName = `${(session.user as any).id}-${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
     const { data: storageData, error: storageError } = await insforgeAdmin.storage
