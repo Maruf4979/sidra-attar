@@ -3859,3 +3859,7 @@ input, textarea, select {
   border-radius: var(--radius-md);
 }
 
+
+.profile-text { margin-left: 4px; }
+.profile-trigger-btn { padding: 8px 12px; }
+.profile-trigger-btn .header-icon-text { font-size: 0.85rem; margin-top: 0; }

@@ -69,18 +69,32 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
-        // Include emailVerified from the user object (Prisma or provider)
         token.emailVerified = (user as any).emailVerified;
+        token.picture = (user as any).image;
       }
+
+      // Handle session updates (e.g. after profile photo change)
+      if (trigger === "update" && session?.image) {
+        token.picture = session.image;
+      } else if (token.email) {
+        // Occasionally refresh from DB to get latest avatar
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+          select: { image: true }
+        });
+        if (dbUser) token.picture = dbUser.image;
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
         (session.user as any).emailVerified = token.emailVerified;
+        session.user.image = token.picture as string;
       }
       return session;
     },

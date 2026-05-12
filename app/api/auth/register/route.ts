@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       
       // Auto-confirm user email in InsForge
       try {
-        const { error: confirmError } = await insforge.rpc('confirm_user_email', { 
+        const { error: confirmError } = await (insforge.database as any).rpc('confirm_user_email', { 
           user_email: email 
         });
         if (confirmError) console.error("InsForge confirm error:", confirmError);

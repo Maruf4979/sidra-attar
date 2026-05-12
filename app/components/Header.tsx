@@ -168,9 +168,8 @@ export default function Header() {
                       <span>{userName.charAt(0).toUpperCase()}</span>
                     )}
                   </div>
-                  <div className="profile-text hide-mobile">
+                  <div className="profile-text">
                     <span className="header-icon-subtext">Hello, {userName.split(' ')[0]}</span>
-                    <span className="header-icon-text">Account & Lists</span>
                   </div>
                 </button>
 
@@ -215,9 +214,8 @@ export default function Header() {
                 )}
               </div>
             ) : (
-              <Link href="/auth/signin" className="header-icon-btn">
-                <span className="header-icon-subtext">Hello, sign in</span>
-                <span className="header-icon-text">Account</span>
+              <Link href="/auth/signin" className="header-icon-btn profile-trigger-btn">
+                <span className="header-icon-text">Sign In/Sign Up</span>
               </Link>
             )}
 

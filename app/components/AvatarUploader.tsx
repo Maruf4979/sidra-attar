@@ -21,28 +21,25 @@ export default function AvatarUploader({
     setLoading(true);
 
     try {
-      // 1. Upload to InsForge storage
-      const { data, error } = await insforge.storage
-        .from("customer-data")
-        .uploadAuto(file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      if (error) {
-        throw new Error(error.message);
+      const res = await fetch("/api/user/avatar", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to upload image");
       }
 
-      if (data?.url) {
-        // 2. Update user profile in our database via an API route
-        const res = await fetch("/api/user/profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageUrl: data.url }),
-        });
-
-        if (!res.ok) throw new Error("Failed to save image URL");
-
-        setImageUrl(data.url);
-        alert("Profile picture updated successfully!");
-      }
+      const data = await res.json();
+      setImageUrl(data.url);
+      
+      // Force refresh session to show new avatar everywhere
+      // Note: We use window.location.reload() for a hard refresh of the session
+      window.location.reload();
     } catch (err: any) {
       console.error(err);
       alert(err.message || "Failed to upload image");
