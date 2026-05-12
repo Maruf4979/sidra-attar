@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/app/lib/prisma";
-import { insforge } from "@/app/lib/insforge";
+import { insforge, insforgeAdmin } from "@/app/lib/insforge";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -69,15 +69,18 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
+        // Include emailVerified from the user object (Prisma or provider)
+        token.emailVerified = (user as any).emailVerified;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as { id: string }).id = token.id as string;
+        (session.user as any).id = token.id;
+        (session.user as any).emailVerified = token.emailVerified;
       }
       return session;
     },
@@ -88,13 +91,33 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user, account }) {
-      if (!user.email) return;
+      if (!user.email) return true;
 
       console.log(`Syncing user to InsForge: ${user.email}`);
       
       try {
-        // 1. Check if customer exists in InsForge DB by email
-        const { data: customer } = await insforge.database
+        // 1. If signing in with Google, mark as verified in both Prisma and InsForge
+        if (account?.provider === "google") {
+          console.log(`Google OAuth detected for ${user.email}. Marking as verified.`);
+          
+          // Update local Prisma DB
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { emailVerified: new Date() }
+          });
+
+          // Update InsForge Auth status via RPC
+          try {
+            await (insforgeAdmin.database as any).rpc('confirm_google_user', { 
+              user_email: user.email 
+            });
+          } catch (rpcErr) {
+            console.error("InsForge RPC error (confirm_google_user):", rpcErr);
+          }
+        }
+
+        // 2. Check if customer exists in InsForge DB by email
+        const { data: customer } = await insforgeAdmin.database
           .from('customers')
           .select('id, user_id')
           .eq('email', user.email)
@@ -103,23 +126,18 @@ export const authOptions: NextAuthOptions = {
         let insUserId: string;
 
         if (!customer) {
+          console.log(`Creating new InsForge user record for: ${user.email}`);
           // Create new InsForge Auth user for Google/OAuth signups
           const randomPassword = crypto.randomBytes(16).toString('hex');
-          const { data: newUser, error: signUpError } = await insforge.auth.signUp({
+          const { data: newUser, error: signUpError } = await insforgeAdmin.auth.signUp({
             email: user.email,
             password: randomPassword,
             name: user.name || '',
           });
 
           if (signUpError) {
-            console.error("InsForge auto-signup error:", signUpError);
-            // Fallback: if user already exists in Auth but not in our customers table
-            const { data: authUser } = await insforge.database.from('users').select('id').eq('email', user.email).maybeSingle();
-            if (authUser) {
-                insUserId = authUser.id;
-            } else {
-                return;
-            }
+            console.error("InsForge auto-signup error (possibly exists):", signUpError.message);
+            return true;
           } else {
             insUserId = newUser!.user!.id;
           }
@@ -127,7 +145,7 @@ export const authOptions: NextAuthOptions = {
           const firstName = user.name?.split(' ')[0] || 'User';
           const lastName = user.name?.split(' ').slice(1).join(' ') || '';
           
-          await insforge.database
+          await insforgeAdmin.database
             .from('customers')
             .insert({
               user_id: insUserId,
@@ -136,10 +154,13 @@ export const authOptions: NextAuthOptions = {
               last_name: lastName,
             });
           console.log("InsForge customer record created for user");
+        } else {
+          console.log("InsForge customer already exists");
         }
       } catch (err) {
         console.error("InsForge sync event error:", err);
       }
+      return true;
     }
   },
   secret: process.env.NEXTAUTH_SECRET,
