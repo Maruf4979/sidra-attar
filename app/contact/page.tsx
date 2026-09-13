@@ -57,8 +57,8 @@ export default function ContactPage() {
             <div>
               <h4>Email Us</h4>
               <p>
-                hello@sidraattarwala.com<br />
-                wholesale@sidraattarwala.com
+                hello@roohemahboob.com<br />
+                wholesale@roohemahboob.com
               </p>
             </div>
           </div>

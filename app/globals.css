@@ -193,35 +193,68 @@ input, textarea, select {
 
 .logo {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
+  align-items: center;
   text-decoration: none;
   padding: 4px 8px;
   border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
 }
 
 .logo:hover {
-  border: 1px solid #ffffff;
-  border-radius: 2px;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.logo-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-image-wrapper {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.35);
+  flex-shrink: 0;
+  background: #111;
+}
+
+.brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
 }
 
 .logo-text {
   font-family: var(--font-headline);
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--on-primary);
   letter-spacing: 0.02em;
-  line-height: 1;
+  white-space: nowrap;
 }
 
 .logo-sub {
   font-family: var(--font-body);
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   color: var(--secondary);
   font-weight: 700;
+  white-space: nowrap;
 }
 
 /* Amazon Search Bar */
@@ -647,8 +680,13 @@ input, textarea, select {
     padding: 2px 4px;
   }
   
+  .logo-image-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+
   .logo-text {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
   }
 
   .header-icon-btn {
@@ -1707,9 +1745,25 @@ input, textarea, select {
 
 .footer-logo {
   display: flex;
-  flex-direction: column;
-  gap: 0;
+  align-items: center;
+  gap: 12px;
   margin-bottom: var(--space-md);
+}
+
+.footer-logo-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid #d4af37;
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  background: #111;
+  flex-shrink: 0;
+}
+
+.footer-logo-text-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-logo .logo-text {

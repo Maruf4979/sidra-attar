@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useCart } from "../context/CartContext";
 
-const UPI_ID = "sidraattarwala@upi"; // Placeholder — replace with real UPI ID
+const UPI_ID = "roohemahboob@upi"; // Placeholder — replace with real UPI ID
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
@@ -113,7 +113,7 @@ export default function CartPage() {
   };
 
   const upiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-    `upi://pay?pa=${UPI_ID}&pn=Sidra Attar Wala&am=${grandTotal}&cu=INR`
+    `upi://pay?pa=${UPI_ID}&pn=Rooh-e-Mahboob&am=${grandTotal}&cu=INR`
   )}`;
 
   return (

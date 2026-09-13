@@ -3,9 +3,14 @@ import "./globals.css";
 import ClientLayout from "./components/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "Sidra Attar Wala — Artisanal Pure Attars & Perfumery",
+  title: "Rooh-e-Mahboob — Artisanal Pure Attars & Luxury Perfumery",
   description:
-    "Crafting the finest artisanal fragrances since generations. Explore our curated collection of pure attars, oud essences, and luxury perfume oils. Free shipping on orders above ₹999.",
+    "Crafting the finest artisanal fragrances since generations. Explore our curated collection of pure attars, oud essences, and luxury perfume oils from Rooh-e-Mahboob. Free shipping on orders above ₹999.",
+  icons: {
+    icon: "/brand-logo.jpg",
+    shortcut: "/brand-logo.jpg",
+    apple: "/brand-logo.jpg",
+  },
 };
 
 export default function RootLayout({

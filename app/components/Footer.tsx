@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -11,11 +12,20 @@ export default function Footer() {
         {/* Brand Column */}
         <div className="footer-brand">
           <div className="footer-logo">
-            <span className="logo-text">Sidra</span>
-            <span className="logo-sub">Attar Wala</span>
+            <Image 
+              src="/brand-logo.jpg" 
+              alt="Rooh-e-Mahboob Logo" 
+              width={54} 
+              height={54} 
+              className="footer-logo-img" 
+            />
+            <div className="footer-logo-text-wrap">
+              <span className="logo-text">Rooh-e-Mahboob</span>
+              <span className="logo-sub">Artisanal Perfumery</span>
+            </div>
           </div>
           <p className="footer-tagline">
-            Crafting the finest artisanal fragrances since generations. Our
+            Crafting the finest artisanal fragrances since generations. At Rooh-e-Mahboob, our
             legacy is defined by purity, tradition, and the art of modern luxury.
           </p>
           <div className="footer-socials">
@@ -74,7 +84,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>© 2024 Sidra Attar Wala. All rights reserved.</p>
+        <p>© 2026 Rooh-e-Mahboob. All rights reserved.</p>
         <div className="footer-legal">
           <Link href="#">Privacy</Link>
           <Link href="#">Terms</Link>

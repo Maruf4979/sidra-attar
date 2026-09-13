@@ -9,7 +9,7 @@ export default function AboutPage() {
       <div className="page-header">
         <h1>Our Story</h1>
         <p>
-          Discover the heritage, passion, and craftsmanship behind Sidra Attarwala.
+          Discover the heritage, passion, and craftsmanship behind Rooh-e-Mahboob.
         </p>
       </div>
 
@@ -19,7 +19,7 @@ export default function AboutPage() {
           <div>
             <h2 style={{ fontSize: "2rem", marginBottom: "var(--space-md)", color: "var(--primary)" }}>Our Mission</h2>
             <p style={{ color: "var(--on-surface-variant)", lineHeight: 1.8, marginBottom: "var(--space-md)" }}>
-              At Sidra Attarwala, our mission is to bring the timeless elegance of authentic, 
+              At Rooh-e-Mahboob, our mission is to bring the timeless elegance of authentic, 
               alcohol-free attars to the modern world. We believe that a fragrance is more than just a scent; 
               it is an invisible garment that speaks volumes about who you are. We strive to craft 
               the purest blends using traditional distillation methods passed down through generations.

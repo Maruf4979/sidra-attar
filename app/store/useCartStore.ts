@@ -69,7 +69,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'sidra-cart-storage', // unique name for localStorage key
+      name: 'rooh-cart-storage', // unique name for localStorage key
     }
   )
 );

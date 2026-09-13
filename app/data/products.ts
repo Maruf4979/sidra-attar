@@ -1076,7 +1076,7 @@ export const products: Product[] = [
     category: "Today's Deals",
     tags: ["Deal", "Limited", "Best Value"],
     description: "Our complete 12-fragrance discovery set at an unbeatable price for today only.",
-    story: "Experience the full range of Sidra Attar's craftsmanship. From deep ouds to fresh florals, this set allows you to find your signature scent without the premium price tag.",
+    story: "Experience the full range of Rooh-e-Mahboob's craftsmanship. From deep ouds to fresh florals, this set allows you to find your signature scent without the premium price tag.",
     profile: {
       type: "Sampler Set",
       size: "12 x 3ml",

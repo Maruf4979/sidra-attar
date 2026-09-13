@@ -9,7 +9,7 @@ function CustomerServiceContent() {
       
       <div style={{ background: "var(--surface-container-lowest)", padding: "2rem", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-sm)", marginBottom: "2rem" }}>
         <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem", color: "var(--secondary)" }}>Contact Us</h2>
-        <p style={{ marginBottom: "0.5rem" }}><strong>Email:</strong> support@sidraattarwala.com</p>
+        <p style={{ marginBottom: "0.5rem" }}><strong>Email:</strong> support@roohemahboob.com</p>
         <p style={{ marginBottom: "0.5rem" }}><strong>Phone:</strong> +91 12345 67890</p>
         <p style={{ marginBottom: "0.5rem" }}><strong>Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM (IST)</p>
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 
 export default function SignUpPage() {
@@ -44,14 +45,32 @@ export default function SignUpPage() {
       {/* Top Left Logo */}
       <div className="auth-header-fixed">
         <Link href="/" className="auth-logo">
-          <span className="logo-text">Sidra</span>
-          <span className="logo-sub">Attar Wala</span>
+          <div className="auth-logo-brand">
+            <Image 
+              src="/brand-logo.jpg" 
+              alt="Rooh-e-Mahboob" 
+              width={42} 
+              height={42} 
+              className="auth-logo-img" 
+            />
+            <div className="auth-logo-text-group">
+              <span className="logo-text">Rooh-e-Mahboob</span>
+              <span className="logo-sub">Artisanal Perfumery</span>
+            </div>
+          </div>
         </Link>
       </div>
 
       <div className="auth-container">
         <div className="auth-card glass-premium">
           <div className="auth-title-area">
+            <Image 
+              src="/brand-logo.jpg" 
+              alt="Rooh-e-Mahboob" 
+              width={68} 
+              height={68} 
+              className="auth-card-logo-img" 
+            />
             <h1>Create Account</h1>
             <p>Join our fragrant journey</p>
           </div>
@@ -181,8 +200,32 @@ export default function SignUpPage() {
         .auth-logo {
           text-decoration: none;
           display: flex;
+          align-items: center;
+        }
+        .auth-logo-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .auth-logo-img {
+          border-radius: 50%;
+          border: 1.5px solid #d4af37;
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+          object-fit: cover;
+        }
+        .auth-logo-text-group {
+          display: flex;
           flex-direction: column;
           align-items: flex-start;
+          line-height: 1.1;
+        }
+        .auth-card-logo-img {
+          border-radius: 50%;
+          border: 1.5px solid #d4af37;
+          box-shadow: 0 0 16px rgba(212, 175, 55, 0.45);
+          object-fit: cover;
+          margin: 0 auto 14px;
+          display: block;
         }
         .logo-text {
           font-size: 1.8rem; /* Slightly smaller for corner */

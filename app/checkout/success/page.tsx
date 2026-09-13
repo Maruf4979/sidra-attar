@@ -15,7 +15,7 @@ function SuccessContent() {
     <>
       <div className="page-header">
         <h1>Order Confirmed!</h1>
-        <p>Thank you for choosing Sidra Attar Wala</p>
+        <p>Thank you for choosing Rooh-e-Mahboob</p>
       </div>
 
       <div className="section text-center" style={{ paddingTop: "3rem", paddingBottom: "4rem" }}>

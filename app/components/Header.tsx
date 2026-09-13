@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -80,8 +81,22 @@ export default function Header() {
         <div className="header-inner">
           {/* Logo */}
           <Link href="/" className="logo">
-            <span className="logo-text">Sidra</span>
-            <span className="logo-sub">Attar Wala</span>
+            <div className="logo-brand-container">
+              <div className="logo-image-wrapper">
+                <Image 
+                  src="/brand-logo.jpg" 
+                  alt="Rooh-e-Mahboob Logo" 
+                  width={46} 
+                  height={46} 
+                  className="brand-logo-img"
+                  priority
+                />
+              </div>
+              <div className="logo-text-group">
+                <span className="logo-text">Rooh-e-Mahboob</span>
+                <span className="logo-sub">Artisanal Perfumery</span>
+              </div>
+            </div>
           </Link>
 
           {/* Search Bar */}
@@ -105,7 +120,7 @@ export default function Header() {
             <input 
               type="text" 
               className="header-search-input" 
-              placeholder="Search Sidra Attar Wala" 
+              placeholder="Search Rooh-e-Mahboob" 
               suppressHydrationWarning
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
