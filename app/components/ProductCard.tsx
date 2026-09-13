@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
               src={product.image}
               alt={product.name}
               fill
-              sizes="(max-width: 768px) 100vw, 350px"
+              sizes="(max-width: 360px) 100vw, (max-width: 480px) 50vw, (max-width: 900px) 50vw, 350px"
               style={{ objectFit: "cover" }}
               className="product-card-img"
             />

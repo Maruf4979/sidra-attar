@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ClientLayout from "./components/ClientLayout";
 
@@ -11,6 +11,13 @@ export const metadata: Metadata = {
     shortcut: "/brand-logo.jpg",
     apple: "/brand-logo.jpg",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#131921",
 };
 
 export default function RootLayout({
