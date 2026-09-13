@@ -94,7 +94,7 @@ export default function Header() {
               </div>
               <div className="logo-text-group">
                 <span className="logo-text">Rooh-e-Mahboob</span>
-                <span className="logo-sub">Artisanal Perfumery</span>
+                <span className="logo-sub">Fragrances</span>
               </div>
             </div>
           </Link>

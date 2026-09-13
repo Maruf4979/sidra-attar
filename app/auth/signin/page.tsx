@@ -53,7 +53,7 @@ export default function SignInPage() {
             />
             <div className="auth-logo-text-group">
               <span className="logo-text">Rooh-e-Mahboob</span>
-              <span className="logo-sub">Artisanal Perfumery</span>
+              <span className="logo-sub">Fragrances</span>
             </div>
           </div>
         </Link>
@@ -218,12 +218,17 @@ export default function SignInPage() {
           line-height: 1;
         }
         .logo-sub {
-          font-size: 0.65rem;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: 3px;
-          margin-top: 2px;
-          opacity: 0.8;
+          font-family: 'Alex Brush', 'Dancing Script', cursive;
+          font-size: 1.25rem;
+          color: #febd69;
+          text-transform: none;
+          letter-spacing: 1px;
+          margin-top: 1px;
+        }
+        @media (max-width: 640px) {
+          .auth-logo-text-group {
+            display: none !important;
+          }
         }
         .glass-premium {
           background: rgba(19, 25, 33, 0.85); /* More solid background */
