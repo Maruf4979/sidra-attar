@@ -25,5 +25,5 @@
 - `[x]` Phase 5: UI & Data Integration
   - `[x]` Create Orders API route
   - `[x]` Add auth-aware sign-in prompt to checkout
-  - `[ ]` Connect product pages to DB (future enhancement)
-  - `[ ]` Build real "My Orders" page with DB data (future enhancement)
+  - `[x]` Connect product pages to DB (future enhancement)
+  - `[x]` Build real "My Orders" page with DB data (future enhancement)

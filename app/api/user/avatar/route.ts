@@ -27,10 +27,7 @@ export async function POST(request: Request) {
 
     const { data: storageData, error: storageError } = await insforgeAdmin.storage
       .from('avatars')
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: true
-      });
+      .upload(filePath, file);
 
     if (storageError) {
       console.error("Storage upload error:", storageError);
